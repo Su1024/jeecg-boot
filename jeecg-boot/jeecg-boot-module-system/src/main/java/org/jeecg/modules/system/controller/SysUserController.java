@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -60,6 +62,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/sys/user")
+@Api(tags="用户表")
+
 public class SysUserController {
 	@Autowired
 	private ISysBaseAPI sysBaseAPI;
@@ -102,6 +106,7 @@ public class SysUserController {
      * @param req
      * @return
      */
+    @ApiOperation(value="用户管理-分页列表查询", notes="用户管理-分页列表查询")
     @PermissionData(pageComponent = "system/UserList")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysUser>> queryPageList(SysUser user,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -131,7 +136,8 @@ public class SysUserController {
 
     //@RequiresRoles({"admin"})
     //@RequiresPermissions("user:add")
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ApiOperation(value="用户管理-新增用户", notes="用户管理-新增用户")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<SysUser> add(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		String selectedRoles = jsonObject.getString("selectedroles");
@@ -157,7 +163,8 @@ public class SysUserController {
 
     //@RequiresRoles({"admin"})
     //@RequiresPermissions("user:edit")
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+    @ApiOperation(value="用户管理-编辑用户", notes="用户管理-编辑用户")
+    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<SysUser> edit(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		try {
@@ -188,7 +195,8 @@ public class SysUserController {
 	 * 删除用户
 	 */
 	//@RequiresRoles({"admin"})
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @ApiOperation(value="用户管理-删除用户", notes="用户管理-删除用户")
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		baseCommonService.addLog("删除用户，id： " +id ,CommonConstant.LOG_TYPE_2, 3);
 		this.sysUserService.deleteUser(id);
@@ -199,7 +207,8 @@ public class SysUserController {
 	 * 批量删除用户
 	 */
 	//@RequiresRoles({"admin"})
-	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
+    @ApiOperation(value="用户管理-批量删除用户", notes="用户管理-批量删除用户")
+    @RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		baseCommonService.addLog("批量删除用户， ids： " +ids ,CommonConstant.LOG_TYPE_2, 3);
 		this.sysUserService.deleteBatchUsers(ids);
@@ -212,7 +221,8 @@ public class SysUserController {
 	 * @return
 	 */
 	//@RequiresRoles({"admin"})
-	@RequestMapping(value = "/frozenBatch", method = RequestMethod.PUT)
+    @ApiOperation(value="用户管理-冻结&解冻用户", notes="用户管理-冻结&解冻用户")
+    @RequestMapping(value = "/frozenBatch", method = RequestMethod.PUT)
 	public Result<SysUser> frozenBatch(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		try {
@@ -234,6 +244,7 @@ public class SysUserController {
 
     }
 
+    @ApiOperation(value="用户管理-根据id查询用户", notes="用户管理-根据id查询用户")
     @RequestMapping(value = "/queryById", method = RequestMethod.GET)
     public Result<SysUser> queryById(@RequestParam(name = "id", required = true) String id) {
         Result<SysUser> result = new Result<SysUser>();
@@ -299,6 +310,7 @@ public class SysUserController {
      * 修改密码
      */
     //@RequiresRoles({"admin"})
+    @ApiOperation(value="用户管理-修改密码", notes="用户管理-修改密码")
     @RequestMapping(value = "/changePassword", method = RequestMethod.PUT)
     public Result<?> changePassword(@RequestBody SysUser sysUser) {
         SysUser u = this.sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, sysUser.getUsername()));

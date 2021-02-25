@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CacheConstant;
@@ -68,6 +70,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/sys/role")
 @Slf4j
+@Api(tags="角色表")
 public class SysRoleController {
 	@Autowired
 	private ISysRoleService sysRoleService;
@@ -90,7 +93,8 @@ public class SysRoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<IPage<SysRole>> queryPageList(SysRole role,
+    @ApiOperation(value="角色管理-查询角色", notes="角色管理-查询角色")
+    public Result<IPage<SysRole>> queryPageList(SysRole role,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 									  HttpServletRequest req) {
@@ -110,7 +114,8 @@ public class SysRoleController {
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	//@RequiresRoles({"admin"})
-	public Result<SysRole> add(@RequestBody SysRole role) {
+    @ApiOperation(value="角色管理-新增角色", notes="角色管理-新增角色")
+    public Result<SysRole> add(@RequestBody SysRole role) {
 		Result<SysRole> result = new Result<SysRole>();
 		try {
 			role.setCreateTime(new Date());
@@ -129,7 +134,9 @@ public class SysRoleController {
 	 * @return
 	 */
 	//@RequiresRoles({"admin"})
-	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
+
+    @ApiOperation(value="角色管理-编辑角色", notes="角色管理-编辑角色")
+    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<SysRole> edit(@RequestBody SysRole role) {
 		Result<SysRole> result = new Result<SysRole>();
 		SysRole sysrole = sysRoleService.getById(role.getId());
@@ -153,7 +160,8 @@ public class SysRoleController {
 	 * @return
 	 */
 	//@RequiresRoles({"admin"})
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @ApiOperation(value="角色管理-删除角色", notes="角色管理-删除角色")
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public Result<?> delete(@RequestParam(name="id",required=true) String id) {
 		sysRoleService.deleteRole(id);
 		return Result.ok("删除角色成功");
@@ -166,7 +174,8 @@ public class SysRoleController {
 	 */
 	//@RequiresRoles({"admin"})
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-	public Result<SysRole> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
+    @ApiOperation(value="角色管理-批量删除角色", notes="角色管理-批量删除角色")
+    public Result<SysRole> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		Result<SysRole> result = new Result<SysRole>();
 		if(oConvertUtils.isEmpty(ids)) {
 			result.error500("未选中角色！");
@@ -183,7 +192,8 @@ public class SysRoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryById", method = RequestMethod.GET)
-	public Result<SysRole> queryById(@RequestParam(name="id",required=true) String id) {
+    @ApiOperation(value="角色管理-通过id查询角色", notes="角色管理-通过id查询角色")
+    public Result<SysRole> queryById(@RequestParam(name="id",required=true) String id) {
 		Result<SysRole> result = new Result<SysRole>();
 		SysRole sysrole = sysRoleService.getById(id);
 		if(sysrole==null) {

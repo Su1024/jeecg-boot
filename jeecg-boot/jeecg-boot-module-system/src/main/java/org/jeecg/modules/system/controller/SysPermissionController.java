@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/sys/permission")
+@Api(tags="菜单权限表")
 public class SysPermissionController {
 
 	@Autowired
@@ -58,7 +61,8 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<List<SysPermissionTree>> list() {
+    @ApiOperation(value="菜单管理-查询菜单", notes="菜单管理-查询菜单")
+    public Result<List<SysPermissionTree>> list() {
         long start = System.currentTimeMillis();
 		Result<List<SysPermissionTree>> result = new Result<>();
 		try {
@@ -84,7 +88,8 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemMenuList", method = RequestMethod.GET)
-	public Result<List<SysPermissionTree>> getSystemMenuList() {
+    @ApiOperation(value="菜单管理-系统菜单列表", notes="菜单管理-系统菜单列表")
+    public Result<List<SysPermissionTree>> getSystemMenuList() {
         long start = System.currentTimeMillis();
 		Result<List<SysPermissionTree>> result = new Result<>();
 		try {
@@ -113,7 +118,8 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemSubmenu", method = RequestMethod.GET)
-	public Result<List<SysPermissionTree>> getSystemSubmenu(@RequestParam("parentId") String parentId){
+    @ApiOperation(value="菜单管理-查询子菜单", notes="菜单管理-查询子菜单")
+    public Result<List<SysPermissionTree>> getSystemSubmenu(@RequestParam("parentId") String parentId){
 		Result<List<SysPermissionTree>> result = new Result<>();
 		try{
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
@@ -143,7 +149,8 @@ public class SysPermissionController {
 	 * @return 返回 key-value 的 Map
 	 */
 	@GetMapping("/getSystemSubmenuBatch")
-	public Result getSystemSubmenuBatch(@RequestParam("parentIds") String parentIds) {
+    @ApiOperation(value="菜单管理-根据父ID查询子菜单", notes="菜单管理-根据父ID查询子菜单")
+    public Result getSystemSubmenuBatch(@RequestParam("parentIds") String parentIds) {
 		try {
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<>();
 			List<String> parentIdList = Arrays.asList(parentIds.split(","));
@@ -199,7 +206,8 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getUserPermissionByToken", method = RequestMethod.GET)
-	public Result<?> getUserPermissionByToken() {
+    @ApiOperation(value="菜单管理-查询用户拥有的菜单权限和按钮权限", notes="菜单管理-查询用户拥有的菜单权限和按钮权限")
+    public Result<?> getUserPermissionByToken() {
 		Result<JSONObject> result = new Result<JSONObject>();
 		try {
 			//直接获取当前用户不适用前端token
@@ -250,7 +258,8 @@ public class SysPermissionController {
 	 */
 	//@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Result<SysPermission> add(@RequestBody SysPermission permission) {
+    @ApiOperation(value="菜单管理-添加菜单", notes="菜单管理-添加菜单")
+    public Result<SysPermission> add(@RequestBody SysPermission permission) {
 		Result<SysPermission> result = new Result<SysPermission>();
 		try {
 			permission = PermissionDataUtil.intelligentProcessData(permission);
@@ -270,7 +279,8 @@ public class SysPermissionController {
 	 */
 	//@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/edit", method = { RequestMethod.PUT, RequestMethod.POST })
-	public Result<SysPermission> edit(@RequestBody SysPermission permission) {
+    @ApiOperation(value="菜单管理-编辑菜单", notes="菜单管理-编辑菜单")
+    public Result<SysPermission> edit(@RequestBody SysPermission permission) {
 		Result<SysPermission> result = new Result<>();
 		try {
 			permission = PermissionDataUtil.intelligentProcessData(permission);
@@ -290,7 +300,8 @@ public class SysPermissionController {
 	 */
 	//@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public Result<SysPermission> delete(@RequestParam(name = "id", required = true) String id) {
+    @ApiOperation(value="菜单管理-删除菜单", notes="菜单管理-删除菜单")
+    public Result<SysPermission> delete(@RequestParam(name = "id", required = true) String id) {
 		Result<SysPermission> result = new Result<>();
 		try {
 			sysPermissionService.deletePermission(id);
@@ -309,7 +320,8 @@ public class SysPermissionController {
 	 */
 	//@RequiresRoles({ "admin" })
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
-	public Result<SysPermission> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
+    @ApiOperation(value="菜单管理-批量删除菜单", notes="菜单管理-批量删除菜单")
+    public Result<SysPermission> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
 		Result<SysPermission> result = new Result<>();
 		try {
             String[] arr = ids.split(",");
@@ -332,6 +344,7 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
+    @ApiOperation(value="菜单管理-获取全部的权限树", notes="菜单管理-获取全部的权限树")
 	public Result<Map<String, Object>> queryTreeList() {
 		Result<Map<String, Object>> result = new Result<>();
 		// 全部权限ids
@@ -405,7 +418,8 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveRolePermission", method = RequestMethod.POST)
-	//@RequiresRoles({ "admin" })
+    @ApiOperation(value="菜单管理-角色授权", notes="菜单管理-角色授权")
+    //@RequiresRoles({ "admin" })
 	public Result<String> saveRolePermission(@RequestBody JSONObject json) {
 		long start = System.currentTimeMillis();
 		Result<String> result = new Result<>();
